@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv"
 import userRoutes from './routes/user.route.js'
+import authRoutes from './routes/auth.route.js'
 
 dotenv.config();
 mongoose.connect(process.env.MONGO_URL).then(() =>{
@@ -12,11 +13,13 @@ mongoose.connect(process.env.MONGO_URL).then(() =>{
 
 
 const app = express();
+
+app.use(express.json());
  
 
+const PORT = process.env.PORT || 9000;
 
-app.listen(7000, (req, res) => {
-    console.log("Server is running on 7000")
-})
+app.listen(PORT, console.log(`Server is up and running on ${PORT}`))
 
 app.use('/api/user', userRoutes)
+app.use('/api/auth', authRoutes)
