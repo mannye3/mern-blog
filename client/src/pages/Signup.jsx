@@ -69,6 +69,7 @@ export default function Signup() {
                 {errorMessage}
               </Alert>
             )}
+
             <div>
               <Label value="Your Username" />
               <TextInput
