@@ -1,7 +1,7 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
   signInSuccess,
@@ -10,8 +10,7 @@ import {
 
 export default function Signin() {
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(null);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleChange = (e) => {
@@ -21,7 +20,7 @@ export default function Signin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.password || !formData.email) {
-      return setErrorMessage("Please fill out all required fields");
+      return dispatch(signInFailure("Please fill out all required fields"));
     }
     try {
       dispatch(signInStart());
@@ -36,11 +35,9 @@ export default function Signin() {
       const data = await res.json();
 
       if (data.success === false) {
-        setLoading(false);
-        dispatch(signInStart());
+        dispatch(signInFailure(data.message));
       }
 
-      setLoading(false);
       if (res.ok) {
         dispatch(signInSuccess(data));
         navigate("/dashboard");
