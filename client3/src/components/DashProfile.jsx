@@ -118,7 +118,10 @@ export default function DashProfile() {
         },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
+      const text = await res.text(); // Get the response as text first
+      const data = text ? JSON.parse(text) : {}; // Parse text as JSON if not empty
+
+      // const data = await res.json();
       if (!res.ok) {
         dispatch(updateFailure(data.message));
         setUpdateUserError(data.message);
